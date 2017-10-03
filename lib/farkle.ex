@@ -3,13 +3,13 @@ require Logger
 
 defmodule Farkle do
   @moduledoc """
-  Documentation for Farkle.
+  Functions for the dice game Farkle. 
+  
+  Farkle is played with 6 dice and each die can be used to score only one. Dice can be re-rolled up no more than twice.
   """
 
   @doc """
-  Farkle Score.
-
-  Scores a given roll for the game Farkle. Farkle is played with 6 dice. Each die can be used to score only once. This determines the highest possible score.
+  Returns the highest possible Farkle Score.
 
   Current implemented rules are:
 
@@ -47,14 +47,14 @@ defmodule Farkle do
     |> Enum.sum
   end
 
-  def triple_score(die) do
+  defp triple_score(die) do
     case die do
       1 -> 1000
       _ -> die * 100
     end
   end
 
-  def die_score(die) do
+  defp die_score(die) do
     case die do
       1 -> 100
       5 -> 50
