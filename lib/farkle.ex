@@ -37,28 +37,24 @@ defmodule Farkle do
       2150 
   """
   def score(dice) do
-    Enum.reduce(dice, %{}, fn(die, map) -> Map.update(map, die, 1, &(&1 + 1)) end)
-    |> Enum.map(fn 
-      {die, count} when count > 4  -> triple_score(die) * 2 + die_score(die) * (count - 4)
-      {die, count} when count == 4 -> triple_score(die) * 2
-      {die, count} when count == 3 -> triple_score(die)
-      {die, count} when count < 3  -> die_score(die) * count
-    end)
+    count_by_die(dice)
+    |> Enum.map(&score_by_count/1)
     |> Enum.sum
   end
 
-  defp triple_score(die) do
-    case die do
-      1 -> 1000
-      _ -> die * 100
-    end
+  defp count_by_die(dice) do
+    Enum.reduce(dice, %{}, fn (die, map) -> Map.update(map, die, 1, &(&1 + 1)) end)
   end
 
-  defp die_score(die) do
-    case die do
-      1 -> 100
-      5 -> 50
-      _ -> 0
-    end
-  end
+  defp score_by_count({die, count}) when count > 4,  do: triple_score(die) * 2 + die_score(die) * (count - 4)
+  defp score_by_count({die, count}) when count == 4, do: triple_score(die) * 2
+  defp score_by_count({die, count}) when count == 3, do: triple_score(die)
+  defp score_by_count({die, count}) when count < 3,  do: die_score(die) * count
+
+  defp triple_score(1),   do: 1000
+  defp triple_score(die), do: die * 100
+
+  defp die_score(1), do: 100
+  defp die_score(5), do: 50
+  defp die_score(_), do: 0
 end
